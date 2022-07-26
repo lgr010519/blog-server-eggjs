@@ -2,6 +2,7 @@ module.exports = (app) => {
     app.once('server', (server) => {
         // websocket
         // console.log('server')
+        // app.log('123=====',app.bar)
     });
     app.on('error', (err, ctx) => {
         // report error

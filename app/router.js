@@ -5,9 +5,7 @@
  */
 module.exports = app => {
   const { router, controller } = app;
-  router.get('/', controller.home.index);
-  router.get('/news', controller.news.list);
-  router.post('/file',controller.posts.file)
-  router.resources('posts', '/api/posts', controller.posts);
-  router.get('/add/cookies', controller.home.add);
+  const baseRouter = app.config.baseRouter  //  /api/v1
+  router.post(baseRouter + '/admin/login',controller.admin.adminLogin)
+  router.post(baseRouter + '/admin/logout',controller.admin.adminLogout)
 };
