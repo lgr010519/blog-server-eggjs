@@ -19,12 +19,6 @@ module.exports = {
     });
   },
   // 比较
-  /**
-     *
-     * @param {未加密的密码} _password
-     * @param {数据库保存的已经加密的密码} password
-     * @return boolean 是否匹配
-     */
   comparePassword(_password, password) {
     return new Promise((resolve, reject) => {
       bcrypt.compare(_password, password, (err, isMatch) => {
