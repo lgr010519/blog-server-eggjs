@@ -1,4 +1,4 @@
-module.exports = app => {
+module.exports = () => {
   // app.once('server', server => {
   //   // websocket
   //   // console.log('server')
