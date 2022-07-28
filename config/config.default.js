@@ -2,7 +2,7 @@
 
 'use strict';
 
-const userConfig = require('./config.user')
+const userConfig = require('./config.user');
 
 /**
  * @param {Egg.EggAppInfo} appInfo app info
@@ -30,18 +30,18 @@ module.exports = appInfo => {
 
   // csrf安全
   config.security = {
-    csrf: false
+    csrf: false,
   };
 
   // 上传文件
   config.multipart = {
     mode: 'file',
-    fileExtensions: ['.md'], // 增加对 md 扩展名的文件支持
+    fileExtensions: [ '.md' ], // 增加对 md 扩展名的文件支持
   };
 
   config.session = {
     key: 'BLOG_EGG_SESSION_KEY',
-    encrypt: false
+    encrypt: false,
   };
 
   config.mongoose = {
@@ -50,8 +50,8 @@ module.exports = appInfo => {
   };
 
   config.jwt = {
-    secret: userConfig.userName
-  }
+    secret: userConfig.userName,
+  };
 
   return {
     ...config,
