@@ -53,6 +53,12 @@ module.exports = appInfo => {
     secret: userConfig.userName,
   };
 
+  config.cors = {
+    origin: '*', //域名+端口 或者  *(全匹配)
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
+  };
+
+
   return {
     ...config,
     ...userConfig,

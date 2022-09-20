@@ -21,10 +21,10 @@ class TagsController extends Controller {
       name: {
         type: 'string',
         required: false,
-        min: 2,
+        min: 1,
         max: 20,
         allowEmpty: true,
-        format: /^[\u4e00-\u9fa5A-Za-z0-9_]{2,20}$/,
+        format: /^[\u4e00-\u9fa5A-Za-z0-9_]{1,20}$/,
       },
     };
     this.createRule = {
