@@ -2,7 +2,7 @@ module.exports = app => {
     const mongoose = app.mongoose;
     const Schema = mongoose.Schema;
 
-    const TagsSchema = new Schema({
+    const CategoriesSchema = new Schema({
         name: {
             type: String,
             min: 2,
@@ -21,14 +21,10 @@ module.exports = app => {
             type: Number,
             default: 0,
         },
-        status: {
-            type: Boolean,
-            default: false,
-        },
     }, {
-        collection: 'tags',
+        collection: 'categories',
         versionKey: false,
     });
 
-    return mongoose.model('tags', TagsSchema);
+    return mongoose.model('categories', CategoriesSchema);
 };

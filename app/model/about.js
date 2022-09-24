@@ -2,13 +2,19 @@ module.exports = app => {
     const mongoose = app.mongoose;
     const Schema = mongoose.Schema;
 
-    const TagsSchema = new Schema({
-        name: {
+    const AboutSchema = new Schema({
+        imgs: [
+            {
+                imgUrl: {type: String},
+                link: {type: String, required: false}
+            }
+        ],
+        desc: {
             type: String,
-            min: 2,
-            max: 20,
-            match: /^[\u4e00-\u9fa5A-Za-z0-9_]{2,20}$/,
+            min: 1,
+            max: 800,
         },
+        tags: [String],
         createTime: {
             type: Number,
             default: 0,
@@ -17,18 +23,15 @@ module.exports = app => {
             type: Number,
             default: 0,
         },
-        articleNum: {
-            type: Number,
-            default: 0,
-        },
-        status: {
+        showResume: {
             type: Boolean,
             default: false,
         },
     }, {
-        collection: 'tags',
+        collection: 'about',
         versionKey: false,
     });
 
-    return mongoose.model('tags', TagsSchema);
+    return mongoose.model('about', AboutSchema);
 };
+

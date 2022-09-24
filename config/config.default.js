@@ -18,7 +18,7 @@ module.exports = appInfo => {
     config.keys = appInfo.name + '_1658583789295_3000';
 
     // add your middleware config here
-    config.middleware = ['auth'];
+    config.middleware = ['auth','errorHandler'];
 
     // 模板
     config.view = {

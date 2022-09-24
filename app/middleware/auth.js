@@ -1,6 +1,5 @@
 module.exports = () => {
     return async function auth(ctx, next) {
-        console.log('ctx', ctx)
         const currentUrl = ctx.request.url
         // 前台
         if (currentUrl.indexOf('/web') > -1) {
@@ -25,7 +24,15 @@ module.exports = () => {
         //             await next()
         //         } else {
         //             ctx.status = 403
-        //             ctx.body = '无权限访问'
+        //             ctx.helper.success({
+        //                 ctx,
+        //                 res:{
+        //                     status: 403,
+        //                     msg: '无权限访问',
+        //                     code: 0,
+        //                     data: null,
+        //                 }
+        //             })
         //         }
         //     } else {
         //         await next()
