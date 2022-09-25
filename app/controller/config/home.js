@@ -33,14 +33,6 @@ class HomeController extends Controller {
             aboutBgImg:{
                 type:'string',
             },
-            createTime: {
-                type: 'number',
-                default: 0,
-            },
-            updateTime: {
-                type: 'number',
-                default: 0,
-            },
         };
     }
 

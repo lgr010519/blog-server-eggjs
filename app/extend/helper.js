@@ -57,4 +57,27 @@ module.exports = {
         }
         return pam;
     },
+    getTimeQueryCon(params) {
+        let timeQuery = {}
+        if (params.createStartTime) {
+            timeQuery.createTime = {$gte: params.createStartTime}
+        }
+        if (params.createEndTime) {
+            timeQuery.createTime = {$lte: params.createEndTime}
+        }
+        if (params.createStartTime && params.createEndTime) {
+            timeQuery.createTime = {$gte: params.createStartTime, $lte: params.createEndTime}
+        }
+        if (params.updateStartTime) {
+            timeQuery.updateTime = {$gte: params.updateStartTime}
+        }
+        if (params.updateEndTime) {
+            timeQuery.updateTime = {$lte: params.updateEndTime}
+        }
+        if (params.updateStartTime && params.updateEndTime) {
+            timeQuery.updateTime = {$gte: params.updateStartTime, $lte: params.updateEndTime}
+        }
+
+        return timeQuery
+    }
 };

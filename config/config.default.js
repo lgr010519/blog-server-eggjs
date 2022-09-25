@@ -18,7 +18,7 @@ module.exports = appInfo => {
     config.keys = appInfo.name + '_1658583789295_3000';
 
     // add your middleware config here
-    config.middleware = ['auth','errorHandler'];
+    config.middleware = ['auth', 'errorHandler'];
 
     // 模板
     config.view = {
@@ -30,7 +30,9 @@ module.exports = appInfo => {
 
     // csrf安全
     config.security = {
-        csrf: false,
+        csrf: {
+            enable: false,
+        },
     };
 
     // 上传文件
