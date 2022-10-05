@@ -1,6 +1,45 @@
 const Service = require('egg').Service;
 
 class ArticlesService extends Service {
+
+    async updateCategoriesArticleNum() {
+        const {ctx} = this;
+        const categories = await ctx.model.Categories.find()
+        if (categories && categories.length > 0) {
+            categories.forEach(async item => {
+                const articleNum = await ctx.model.Articles.find({
+                    categories: item.name,
+                    status: 1,
+                    publishStatus: 1,
+                }).countDocuments()
+                await ctx.model.Categories.update({
+                    name: item.name
+                }, {
+                    articleNum
+                })
+            })
+        }
+    }
+
+    async updateTagsArticleNum() {
+        const {ctx} = this;
+        const tags = await ctx.model.Tags.find()
+        if (tags && tags.length > 0) {
+            tags.forEach(async item => {
+                const articleNum = await ctx.model.Articles.find({
+                    tags: {$elemMatch: {$eq: item.name}},
+                    status: 1,
+                    publishStatus: 1,
+                }).countDocuments()
+                await ctx.model.Tags.update({
+                    name: item.name
+                }, {
+                    articleNum
+                })
+            })
+        }
+    }
+
     async index(params) {
         const {ctx} = this;
         const page = params.page * 1;
@@ -16,10 +55,10 @@ class ArticlesService extends Service {
                 $all: params.tags.split(','),
             }
         }
-        if (params.status !== 0) {
+        if (params.status != 0) {
             mustCon.status = params.status
         }
-        if (params.publishStatus !== 0) {
+        if (params.publishStatus != 0) {
             mustCon.publishStatus = params.publishStatus
         }
 
@@ -68,7 +107,8 @@ class ArticlesService extends Service {
             createTime: ctx.helper.moment().unix(),
         };
         const res = await ctx.model.Articles.create(data);
-        // TODO 更新标签和分类里面的文章数量
+        await this.updateCategoriesArticleNum()
+        await this.updateTagsArticleNum()
         return {
             msg: '文章添加成功',
             data: res,
@@ -94,7 +134,8 @@ class ArticlesService extends Service {
         await ctx.model.Articles.updateOne({
             _id: params.id,
         }, updateData);
-        // TODO 更新标签和分类里面的文章数量
+        await this.updateCategoriesArticleNum()
+        await this.updateTagsArticleNum()
         return {
             msg: '文章修改成功',
         };
@@ -150,7 +191,7 @@ class ArticlesService extends Service {
             publishStatus: params.publishStatus,
         });
         return {
-            msg: `文章${params.publishStatus === 1 ? '发布' : '取消发布'}成功`,
+            msg: `文章${params.publishStatus === 1 ? '发布' : '下线'}成功`,
         };
     }
 
@@ -162,6 +203,21 @@ class ArticlesService extends Service {
         return {
             msg: `文章${params.isCollect ? '一键开启' : '一键取消'}成功`,
         };
+    }
+
+    async edit(id) {
+        const {ctx} = this;
+        const oldArticles = await ctx.model.Articles.findOne({_id: id});
+        if (!oldArticles) {
+            return {
+                code: 201,
+                msg: '文章不存在'
+            }
+        }
+        return {
+            data: oldArticles,
+            msg: '文章详情获取成功'
+        }
     }
 }
 

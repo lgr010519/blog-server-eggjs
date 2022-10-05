@@ -223,7 +223,7 @@ class ArticlesController extends Controller {
         const {ctx, service} = this;
         const data = ctx.request.body;
         const id = ctx.params.id;
-        ctx.validate(this.changeStatusRule, data)
+        ctx.validate(this.changePublishStatusRule, data)
         const res = await service.articles.changePublishStatus({
             id,
             publishStatus: data.publishStatus,
@@ -239,6 +239,16 @@ class ArticlesController extends Controller {
         const {ctx, service} = this;
         const data = ctx.request.body;
         const res = await service.articles.changeCollectStatus(data);
+        ctx.helper.success({
+            ctx,
+            res,
+        });
+    }
+
+    async edit() {
+        const {ctx, service} = this;
+        const data = ctx.params;
+        const res = await service.articles.edit(data.id);
         ctx.helper.success({
             ctx,
             res,
