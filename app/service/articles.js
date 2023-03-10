@@ -5,6 +5,7 @@ class ArticlesService extends Service {
     async updateCategoriesArticleNum() {
         const {ctx} = this;
         const categories = await ctx.model.Categories.find()
+        console.log('categories',categories)
         if (categories && categories.length > 0) {
             categories.forEach(async item => {
                 const articleNum = await ctx.model.Articles.find({
@@ -48,11 +49,13 @@ class ArticlesService extends Service {
 
         let mustCon = {}
         if (params.categories) {
-            mustCon.categories = params.categories
+            mustCon.categories = {
+                $in: params.categories.split(','),
+            }
         }
         if (params.tags) {
             mustCon.tags = {
-                $all: params.tags.split(','),
+                $in: params.tags.split(','),
             }
         }
         if (params.status != 0) {
@@ -127,9 +130,8 @@ class ArticlesService extends Service {
             };
         }
         const updateData = {
-            // createTime: oldArticles.createTime,
+            ...params,
             updateTime: ctx.helper.moment().unix(),
-            ...params
         };
         await ctx.model.Articles.updateOne({
             _id: params.id,
@@ -171,6 +173,8 @@ class ArticlesService extends Service {
         }, {
             status: params.status,
         });
+        await this.updateCategoriesArticleNum()
+        await this.updateTagsArticleNum()
         return {
             msg: `文章${params.status === 1 ? '启用' : '停用'}成功`,
         };
@@ -190,6 +194,8 @@ class ArticlesService extends Service {
         }, {
             publishStatus: params.publishStatus,
         });
+        await this.updateCategoriesArticleNum()
+        await this.updateTagsArticleNum()
         return {
             msg: `文章${params.publishStatus === 1 ? '发布' : '下线'}成功`,
         };

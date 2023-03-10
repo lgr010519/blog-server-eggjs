@@ -42,6 +42,17 @@ class UserService extends Service {
             msg: '用户删除成功',
         };
     }
+
+    async getUserNum() {
+        const {ctx} = this;
+        const userNum = await ctx.model.User.find();
+        return {
+            data: {
+                userNum,
+            },
+            msg: '查询成功',
+        };
+    }
 }
 
 module.exports = UserService;

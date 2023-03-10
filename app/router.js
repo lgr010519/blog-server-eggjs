@@ -1,5 +1,6 @@
 'use strict';
 
+const {baseRouter} = require("../config/config.user");
 /**
  * @param {Egg.Application} app - egg application
  */
@@ -17,6 +18,7 @@ module.exports = app => {
     router.resources('categories', baseRouter + '/categories', jwt, controller.categories); // 分类
     router.resources('about', baseRouter + '/about', jwt, controller.about); // 关于
     router.resources('user', baseRouter + '/user', jwt, controller.user); // 用户
+    router.get('userNum', baseRouter + '/user/userNum', jwt, controller.user.getUserNum); // 用户数量统计
     router.resources('comment', baseRouter + '/comment', jwt, controller.comment); // 评论
     router.resources('home', baseRouter + '/config/home', jwt, controller.config.home); // 首页配置
     router.resources('hf', baseRouter + '/config/hf', jwt, controller.config.hf); // Header/Footer配置

@@ -47,6 +47,15 @@ class UserController extends Controller {
             res,
         });
     }
+
+    async getUserNum() {
+        const {ctx, service} = this;
+        const res = await service.user.getUserNum();
+        ctx.helper.success({
+            ctx,
+            res,
+        });
+    }
 }
 
 module.exports = UserController;
