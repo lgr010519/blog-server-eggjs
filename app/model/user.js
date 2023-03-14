@@ -35,14 +35,6 @@ module.exports = app => {
             required: false,
             max: 1000,
         },
-        loginTime: {
-            type: Number,
-            default: 0,
-        },
-        registerTime: {
-            type: Number,
-            default: 0,
-        },
         articleIds: {
             type: 'array',
             default: 0,

@@ -20,9 +20,8 @@ module.exports = app => {
     helper.genSaltPassword(adminUser.password).then(async hash => {
         adminUser.password = hash;
         const oldUser = await AdminModel.find({userName: adminUser.userName});
-        // console.log('oldUser',oldUser)
         if (oldUser.length === 0) {
-            AdminModel.create(adminUser);
+            await AdminModel.create(adminUser);
         }
     });
 

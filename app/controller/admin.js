@@ -14,7 +14,6 @@ class AdminController extends Controller {
             },
             password: {
                 type: 'password',
-                // compare: 're-password',
                 min: 6,
                 max: 20,
                 format: /^[A-Za-z0-9_]{6,20}$/,

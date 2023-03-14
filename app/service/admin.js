@@ -6,7 +6,6 @@ class AdminService extends Service {
         const oldUser = await ctx.model.Admin.findOne({
             userName: params.userName,
         });
-        // console.log(oldUser)
         if (!oldUser) {
             return {
                 code: 201,

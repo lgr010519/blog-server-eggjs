@@ -53,6 +53,77 @@ class UserService extends Service {
             msg: '查询成功',
         };
     }
+
+    async userLogin(params) {
+        const {ctx, app} = this;
+        const oldUser = await ctx.model.User.findOne({
+            email: params.email,
+        });
+        if (!oldUser) {
+            return {
+                code: 201,
+                msg: '用户不存在',
+            };
+        }
+        const isMatch = await ctx.helper.comparePassword(params.password, oldUser.password);
+        if (!isMatch) {
+            return {
+                code: 201,
+                msg: '邮箱或密码错误',
+            };
+        }
+        const token = app.jwt.sign({...oldUser}, app.config.jwt.secret, {
+            expiresIn: '1h',
+        });
+        ctx.cookies.set('token', token, {
+            maxAge: 86400000,
+            httpOnly: true,
+        });
+
+        return {
+            data: {
+                token,
+                userInfo: oldUser,
+            },
+            msg: '登录成功',
+        };
+    }
+
+    async userRegister(params) {
+        const {ctx} = this;
+        const oldUser = await ctx.model.User.findOne({
+            email: params.email,
+        });
+        if (oldUser) {
+            return {
+                code: 201,
+                msg: '该邮箱已被注册',
+            };
+        }else {
+            ctx.helper.genSaltPassword(params.password).then(async hash => {
+                params.password = hash;
+                const oldUser = await ctx.model.User.find({email: params.email});
+                if (oldUser.length === 0) {
+                    await ctx.model.User.create(params);
+                }
+            });
+        }
+
+        return {
+            msg: '注册成功',
+        };
+    }
+
+    async userLogout() {
+        const {ctx} = this;
+        ctx.cookies.set('token', '', {
+            maxAge: 0,
+        });
+
+        return {
+            msg: '退出登录成功',
+        };
+    }
 }
 
 module.exports = UserService;
