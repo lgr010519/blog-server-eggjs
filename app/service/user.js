@@ -28,6 +28,19 @@ class UserService extends Service {
         };
     }
 
+    async update(data) {
+        const {ctx} = this;
+        ctx.helper.genSaltPassword(data.password).then(async hash => {
+            data.password = hash;
+            await ctx.model.User.updateOne({email: data.email},data);
+        });
+        const res = await ctx.model.User.findOne({email: data.email});
+        return {
+            userInfo: res,
+            msg: '用户信息修改成功',
+        };
+    }
+
     async destroy(id) {
         const {ctx} = this;
         const oldUser = await ctx.model.User.findOne({_id: id});

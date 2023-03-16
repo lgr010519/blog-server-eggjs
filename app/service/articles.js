@@ -5,7 +5,6 @@ class ArticlesService extends Service {
     async updateCategoriesArticleNum() {
         const {ctx} = this;
         const categories = await ctx.model.Categories.find()
-        console.log('categories',categories)
         if (categories && categories.length > 0) {
             categories.forEach(async item => {
                 const articleNum = await ctx.model.Articles.find({
@@ -81,7 +80,7 @@ class ArticlesService extends Service {
         }
         const totalCount = await ctx.model.Articles.find(queryCon).countDocuments();
         const data = await ctx.model.Articles.find(queryCon).sort({
-            createTime: -1,
+            updateTime: -1,
         }).skip((page - 1) * pageSize)
             .limit(pageSize);
         return {
@@ -223,6 +222,49 @@ class ArticlesService extends Service {
         return {
             data: oldArticles,
             msg: '文章详情获取成功'
+        }
+    }
+
+    async getArticleDetail(id) {
+        const {ctx} = this;
+        const article = await ctx.model.Articles.findOne({_id: id});
+        if (!article) {
+            return {
+                code: 201,
+                msg: '文章不存在或已被删除'
+            }
+        }
+        return {
+            data: article,
+            msg: '文章详情获取成功'
+        }
+    }
+
+    async addViews(id) {
+        const {ctx} = this;
+        const article = await ctx.model.Articles.findOne({_id: id});
+        if (!article) {
+            return {
+                code: 201,
+                msg: '文章不存在或已被删除'
+            }
+        }
+        await ctx.model.Articles.updateOne({_id: id},{views: article.views + 1});
+        return {
+            msg: '查看文章成功'
+        }
+    }
+
+    async getArticlesByTags(tag) {
+        const {ctx} = this;
+        const articles = await ctx.model.Articles.find({
+            tags: {
+                $in: [tag]
+            }
+        });
+        return {
+            data: articles,
+            msg: '文章获取成功'
         }
     }
 }

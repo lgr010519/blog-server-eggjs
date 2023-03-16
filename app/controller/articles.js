@@ -254,6 +254,36 @@ class ArticlesController extends Controller {
             res,
         });
     }
+
+    async getArticleDetail() {
+        const {ctx, service} = this;
+        const data = ctx.params;
+        const res = await service.articles.getArticleDetail(data.id);
+        ctx.helper.success({
+            ctx,
+            res,
+        });
+    }
+
+    async addViews() {
+        const {ctx, service} = this;
+        const data = ctx.params;
+        const res = await service.articles.addViews(data.id);
+        ctx.helper.success({
+            ctx,
+            res,
+        });
+    }
+
+    async getArticlesByTags() {
+        const {ctx, service} = this;
+        const data = ctx.request.body;
+        const res = await service.articles.getArticlesByTags(data.tag);
+        ctx.helper.success({
+            ctx,
+            res,
+        });
+    }
 }
 
 module.exports = ArticlesController;

@@ -1,6 +1,7 @@
 'use strict';
 
 const Controller = require('egg').Controller;
+const svgCaptcha = require('svg-captcha')
 
 class UserController extends Controller {
     constructor(ctx) {
@@ -9,7 +10,7 @@ class UserController extends Controller {
             email: {
                 type: 'string',
                 min: 5,
-                max: 20,
+                max: 30,
                 format: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
             },
             password: {
@@ -26,7 +27,7 @@ class UserController extends Controller {
             email: {
                 type: 'string',
                 min: 5,
-                max: 20,
+                max: 30,
                 format: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
             },
             nickName: {
@@ -82,6 +83,16 @@ class UserController extends Controller {
         });
     }
 
+    async update() {
+        const {ctx, service} = this;
+        const data = ctx.request.body;
+        const res = await service.user.update(data);
+        ctx.helper.success({
+            ctx,
+            res,
+        });
+    }
+
     async destroy() {
         const {ctx, service} = this;
         const id = ctx.params.id;
@@ -129,6 +140,27 @@ class UserController extends Controller {
         ctx.helper.success({
             ctx,
             res,
+        });
+    }
+
+    async getCaptcha() {
+        const {ctx} = this;
+        const captcha = svgCaptcha.create({
+            size: 4,
+            fontSize: 50,
+            ignoreChars: 'Ooli',
+            width: 100,
+            height: 40,
+            noise: 3,
+            color: true,
+            background: '#cc9966',
+        });
+        ctx.response.type = 'image/svg+xml';
+        ctx.helper.success({
+            ctx,
+            res: {
+                data: captcha,
+            }
         });
     }
 }
