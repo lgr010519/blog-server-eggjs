@@ -163,6 +163,26 @@ class UserController extends Controller {
             }
         });
     }
+
+    async getUserInfo() {
+        const {ctx, service} = this;
+        const id = ctx.request.url.split('?')[1].split('=')[1];
+        const res = await service.user.getUserInfo(id);
+        ctx.helper.success({
+            ctx,
+            res,
+        });
+    }
+
+    async updateUserCollectNum() {
+        const {ctx, service} = this;
+        const data = ctx.request.body;
+        const res = await service.user.updateUserCollectNum(data);
+        ctx.helper.success({
+            ctx,
+            res,
+        });
+    }
 }
 
 module.exports = UserController;

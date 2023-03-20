@@ -30,13 +30,19 @@ class UserService extends Service {
 
     async update(data) {
         const {ctx} = this;
+        const res = await ctx.model.User.findOne({email: data.email});
+        const isMatch = await ctx.helper.comparePassword(data.oldPassword, res.password)
+        if (!isMatch) {
+            return {
+                code: 201,
+                msg: '原密码输入错误',
+            };
+        }
         ctx.helper.genSaltPassword(data.password).then(async hash => {
             data.password = hash;
-            await ctx.model.User.updateOne({email: data.email},data);
+            await ctx.model.User.updateOne({email: data.email}, data);
         });
-        const res = await ctx.model.User.findOne({email: data.email});
         return {
-            userInfo: res,
             msg: '用户信息修改成功',
         };
     }
@@ -86,7 +92,7 @@ class UserService extends Service {
             };
         }
         const token = app.jwt.sign({...oldUser}, app.config.jwt.secret, {
-            expiresIn: '1h',
+            expiresIn: '24h',
         });
         ctx.cookies.set('token', token, {
             maxAge: 86400000,
@@ -112,7 +118,7 @@ class UserService extends Service {
                 code: 201,
                 msg: '该邮箱已被注册',
             };
-        }else {
+        } else {
             ctx.helper.genSaltPassword(params.password).then(async hash => {
                 params.password = hash;
                 const oldUser = await ctx.model.User.find({email: params.email});
@@ -135,6 +141,26 @@ class UserService extends Service {
 
         return {
             msg: '退出登录成功',
+        };
+    }
+
+    async getUserInfo(id) {
+        const {ctx} = this;
+        const userInfo = await ctx.model.User.findOne({_id: id});
+        return {
+            data: {
+                userInfo
+            },
+            msg: '查询成功',
+        };
+    }
+
+    async updateUserCollectNum(data) {
+        const {ctx} = this;
+        const res = await ctx.model.User.findOne({email: data.email})
+        await ctx.model.User.updateOne({email: data.email}, {articleIds: [...res.articleIds, data.articleId]})
+        return {
+            msg: '收藏成功',
         };
     }
 }

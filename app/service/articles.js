@@ -80,7 +80,7 @@ class ArticlesService extends Service {
         }
         const totalCount = await ctx.model.Articles.find(queryCon).countDocuments();
         const data = await ctx.model.Articles.find(queryCon).sort({
-            updateTime: -1,
+            createTime: -1,
         }).skip((page - 1) * pageSize)
             .limit(pageSize);
         return {
@@ -249,21 +249,60 @@ class ArticlesService extends Service {
                 msg: '文章不存在或已被删除'
             }
         }
-        await ctx.model.Articles.updateOne({_id: id},{views: article.views + 1});
+        await ctx.model.Articles.updateOne({_id: id}, {views: article.views + 1});
         return {
             msg: '查看文章成功'
         }
     }
 
-    async getArticlesByTags(tag) {
+    async getArticlesByTags(params) {
         const {ctx} = this;
+        const page = params.page * 1;
+        const pageSize = params.pageSize * 1;
+        const totalCount = await ctx.model.Articles.find({
+            tags: {
+                $in: [params.tag]
+            }
+        }).countDocuments();
         const articles = await ctx.model.Articles.find({
             tags: {
-                $in: [tag]
+                $in: [params.tag]
             }
-        });
+        }).sort({
+            createTime: -1,
+        }).skip((page - 1) * pageSize)
+            .limit(pageSize);
         return {
-            data: articles,
+            data: {
+                articles,
+                totalCount
+            },
+            msg: '文章获取成功'
+        }
+    }
+
+    async getArticlesByCategories(params) {
+        const {ctx} = this;
+        const page = params.page * 1;
+        const pageSize = params.pageSize * 1;
+        const totalCount = await ctx.model.Articles.find({
+            categories: {
+                $in: params.categories.split(',')
+            }
+        }).countDocuments();
+        const articles = await ctx.model.Articles.find({
+            categories: {
+                $in: params.categories.split(',')
+            }
+        }).sort({
+            createTime: -1,
+        }).skip((page - 1) * pageSize)
+            .limit(pageSize);
+        return {
+            data: {
+                articles,
+                totalCount
+            },
             msg: '文章获取成功'
         }
     }

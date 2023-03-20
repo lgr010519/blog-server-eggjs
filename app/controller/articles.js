@@ -21,7 +21,7 @@ class ArticlesController extends Controller {
             title: {
                 type: 'string',
                 required: false,
-                min: 2,
+                min: 1,
                 max: 200,
                 allowEmpty: true,
             },
@@ -278,7 +278,17 @@ class ArticlesController extends Controller {
     async getArticlesByTags() {
         const {ctx, service} = this;
         const data = ctx.request.body;
-        const res = await service.articles.getArticlesByTags(data.tag);
+        const res = await service.articles.getArticlesByTags(data);
+        ctx.helper.success({
+            ctx,
+            res,
+        });
+    }
+
+    async getArticlesByCategories() {
+        const {ctx, service} = this;
+        const data = ctx.request.body;
+        const res = await service.articles.getArticlesByCategories(data);
         ctx.helper.success({
             ctx,
             res,
