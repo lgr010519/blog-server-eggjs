@@ -306,6 +306,21 @@ class ArticlesService extends Service {
             msg: '文章获取成功'
         }
     }
+
+    async getArticlesByIds(articleIds) {
+        const {ctx} = this;
+        const collectArticles = await ctx.model.Articles.find({
+            _id: {
+                $in: articleIds
+            }
+        })
+        return {
+            data: {
+                collectArticles
+            },
+            msg: '用户收藏文章获取成功'
+        }
+    }
 }
 
 module.exports = ArticlesService;

@@ -41,21 +41,23 @@ class CommentService extends Service {
     }
 
     async create(params) {
+        console.log('params', params)
         const {ctx} = this;
         const data = {
             ...params,
             commentTime: ctx.helper.moment().unix(),
         };
-        // TODO 修改文章评论数量
-        const res = await ctx.model.Comment.create(data);
+        await ctx.model.Comment.create(data);
+        const res = await ctx.model.Articles.findOne({
+            _id: params.articleId
+        })
         await ctx.model.Articles.updateOne({
             _id: params.articleId
         }, {
-            $inc: {comment: 1}
+            comment: res.comment + 1
         })
         return {
-            msg: '评论添加成功',
-            data: res,
+            msg: '评论成功',
         };
     }
 
@@ -75,8 +77,8 @@ class CommentService extends Service {
         });
         if (!oldComment) {
             return {
-                code:201,
-                msg:'评论不存在',
+                code: 201,
+                msg: '评论不存在',
             }
         }
         const updateData = {
@@ -101,10 +103,10 @@ class CommentService extends Service {
             };
         }
         await ctx.model.Comment.deleteOne({_id: id});
-        const articleId=oldComment.articleId
+        const articleId = oldComment.articleId
         await ctx.model.Articles.updateOne({
-            _id:articleId
-        },{
+            _id: articleId
+        }, {
             $inc: {comment: -1}
         })
         return {

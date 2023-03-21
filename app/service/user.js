@@ -158,10 +158,29 @@ class UserService extends Service {
     async updateUserCollectNum(data) {
         const {ctx} = this;
         const res = await ctx.model.User.findOne({email: data.email})
-        await ctx.model.User.updateOne({email: data.email}, {articleIds: [...res.articleIds, data.articleId]})
-        return {
-            msg: '收藏成功',
-        };
+        if (data.addCollect) {
+            if (res.articleIds.includes(data.articleId)) {
+                return {
+                    code: 201,
+                    msg: '本文章已经收藏啦，快去个人中心看看吧~',
+                };
+            }
+            await ctx.model.User.updateOne({email: data.email}, {articleIds: [data.articleId, ...res.articleIds]})
+            return {
+                msg: '收藏成功~',
+            };
+        } else if (data.reduceCollect) {
+            res.articleIds.splice(res.articleIds.indexOf(data.articleId), 1)
+            await ctx.model.User.updateOne({email: data.email}, {articleIds: res.articleIds})
+            return {
+                msg: '取消收藏成功',
+            };
+        }else if (data.reduceCollectAll){
+            await ctx.model.User.updateOne({email: data.email}, {articleIds: []})
+            return {
+                msg: '一键取消收藏成功',
+            };
+        }
     }
 }
 

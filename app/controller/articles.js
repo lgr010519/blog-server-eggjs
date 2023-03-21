@@ -219,6 +219,7 @@ class ArticlesController extends Controller {
             res,
         });
     }
+
     async changePublishStatus() {
         const {ctx, service} = this;
         const data = ctx.request.body;
@@ -289,6 +290,16 @@ class ArticlesController extends Controller {
         const {ctx, service} = this;
         const data = ctx.request.body;
         const res = await service.articles.getArticlesByCategories(data);
+        ctx.helper.success({
+            ctx,
+            res,
+        });
+    }
+
+    async getArticlesByIds() {
+        const {ctx, service} = this;
+        const articleIds = ctx.request.body.articleIds;
+        const res = await service.articles.getArticlesByIds(articleIds);
         ctx.helper.success({
             ctx,
             res,
