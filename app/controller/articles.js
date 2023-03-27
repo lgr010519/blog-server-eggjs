@@ -266,6 +266,16 @@ class ArticlesController extends Controller {
         });
     }
 
+    async addLikes() {
+        const {ctx, service} = this;
+        const data = ctx.params;
+        const res = await service.articles.addLikes(data.id);
+        ctx.helper.success({
+            ctx,
+            res,
+        });
+    }
+
     async addViews() {
         const {ctx, service} = this;
         const data = ctx.params;

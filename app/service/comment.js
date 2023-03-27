@@ -13,6 +13,11 @@ class CommentService extends Service {
                 auditStatus: params.auditStatus
             }
         }
+        if (params.articleId) {
+            mustCon = {
+                articleId: params.articleId
+            }
+        }
 
         // name 模糊查询
         const queryCon = {
@@ -27,7 +32,7 @@ class CommentService extends Service {
         }
         const totalCount = await ctx.model.Comment.find(queryCon).countDocuments();
         const data = await ctx.model.Comment.find(queryCon).sort({
-            createTime: -1,
+            commentTime: -1,
         }).skip((page - 1) * pageSize)
             .limit(pageSize);
         return {
@@ -41,7 +46,6 @@ class CommentService extends Service {
     }
 
     async create(params) {
-        console.log('params', params)
         const {ctx} = this;
         const data = {
             ...params,

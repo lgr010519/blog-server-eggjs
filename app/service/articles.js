@@ -240,6 +240,21 @@ class ArticlesService extends Service {
         }
     }
 
+    async addLikes(id) {
+        const {ctx} = this;
+        const article = await ctx.model.Articles.findOne({_id: id});
+        if (!article) {
+            return {
+                code: 201,
+                msg: '文章不存在或已被删除'
+            }
+        }
+        await ctx.model.Articles.updateOne({_id: id}, {like: article.like + 1});
+        return {
+            msg: '点赞文章成功'
+        }
+    }
+
     async addViews(id) {
         const {ctx} = this;
         const article = await ctx.model.Articles.findOne({_id: id});

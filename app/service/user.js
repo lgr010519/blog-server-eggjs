@@ -166,17 +166,59 @@ class UserService extends Service {
                 };
             }
             await ctx.model.User.updateOne({email: data.email}, {articleIds: [data.articleId, ...res.articleIds]})
+            const res2 = await ctx.model.User.find({
+                articleIds: {
+                    $in: [data.articleId]
+                }
+            })
+            const articleIds = []
+            res2.map(item => {
+                articleIds.push(...item.articleIds)
+            })
+            const collectNum = articleIds.reduce((initialValue, currentValue) => {
+                if (currentValue === data.articleId) initialValue++
+                return initialValue
+            }, 0)
+            await ctx.model.Articles.updateOne({_id: data.articleId}, {collect: collectNum})
             return {
                 msg: '收藏成功~',
             };
         } else if (data.reduceCollect) {
             res.articleIds.splice(res.articleIds.indexOf(data.articleId), 1)
             await ctx.model.User.updateOne({email: data.email}, {articleIds: res.articleIds})
+            const res3 = await ctx.model.User.find({
+                articleIds: {
+                    $in: [data.articleId]
+                }
+            })
+            const articleIds2 = []
+            res3.map(item => {
+                articleIds2.push(...item.articleIds)
+            })
+            const collectNum2 = articleIds2.reduce((initialValue, currentValue) => {
+                if (currentValue === data.articleId) initialValue++
+                return initialValue
+            }, 0)
+            await ctx.model.Articles.updateOne({_id: data.articleId}, {collect: collectNum2})
             return {
                 msg: '取消收藏成功',
             };
-        }else if (data.reduceCollectAll){
+        } else if (data.reduceCollectAll) {
             await ctx.model.User.updateOne({email: data.email}, {articleIds: []})
+            const res4 = await ctx.model.User.find({
+                articleIds: {
+                    $in: [data.articleId]
+                }
+            })
+            const articleIds3 = []
+            res4.map(item => {
+                articleIds3.push(...item.articleIds)
+            })
+            const collectNum3 = articleIds3.reduce((initialValue, currentValue) => {
+                if (currentValue === data.articleId) initialValue++
+                return initialValue
+            }, 0)
+            await ctx.model.Articles.updateOne({_id: data.articleId}, {collect: collectNum3})
             return {
                 msg: '一键取消收藏成功',
             };

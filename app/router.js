@@ -11,6 +11,7 @@ module.exports = app => {
     router.post(baseRouter + '/admin/logout', controller.admin.adminLogout); // 退出登录
     router.resources('articles', baseRouter + '/articles', controller.articles); // 文章
     router.get(baseRouter + '/articles/:id', controller.articles.getArticleDetail); // 获取文章详情
+    router.put(baseRouter + '/articles/addLikes/:id', controller.articles.addLikes); // 增加点赞数
     router.put(baseRouter + '/articles/addViews/:id', controller.articles.addViews); // 增加查看数
     router.post(baseRouter + '/articles/byTags', controller.articles.getArticlesByTags); // 根据标签获取文章详情
     router.post(baseRouter + '/articles/byCategories', controller.articles.getArticlesByCategories); // 根据分类获取文章详情
