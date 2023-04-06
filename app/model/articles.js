@@ -54,10 +54,6 @@ module.exports = app => {
             type: Boolean,
             default: false,
         },
-        isReward: {
-            type: Boolean,
-            default: false,
-        },
         status: {
             type: Number,
             default: 1,

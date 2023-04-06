@@ -130,10 +130,6 @@ class ArticlesController extends Controller {
                 type: 'boolean',
                 default: false,
             },
-            isReward: {
-                type: 'boolean',
-                default: false,
-            },
             status: {
                 type: 'number',
                 default: 1,
