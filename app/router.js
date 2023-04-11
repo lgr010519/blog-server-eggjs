@@ -32,7 +32,7 @@ module.exports = app => {
     router.get('userNum', baseRouter + '/user/userNum', jwt, controller.user.getUserNum); // 用户数量统计
     router.post(baseRouter + '/user/collect', jwt, controller.user.updateUserCollectNum); // 更新用户收藏文章
     router.resources('comment', baseRouter + '/comment', jwt, controller.comment); // 评论
-    router.resources('home', baseRouter + '/config/home', jwt, controller.config.home); // 首页配置
+    router.resources('home', baseRouter + '/config/home', controller.config.home); // 首页配置
     router.resources('hf', baseRouter + '/config/hf', jwt, controller.config.hf); // Header/Footer配置
     router.resources('right_introduction', baseRouter + '/config/right/introduction', jwt, controller.config.right.introduction); // 个人简介配置
     router.resources('right_ad', baseRouter + '/config/right/ad', jwt, controller.config.right.ad); // 广告设置
