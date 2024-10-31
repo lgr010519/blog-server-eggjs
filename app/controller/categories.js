@@ -38,7 +38,7 @@ class CategoriesController extends Controller {
   }
 
   async index() {
-    const { ctx, service } = this;
+    const {ctx, service} = this;
     const data = ctx.request.query;
     ctx.validate(this.queryListParamsRules, data);
     const res = await service.categories.index(data);
@@ -49,7 +49,7 @@ class CategoriesController extends Controller {
   }
 
   async create() {
-    const { ctx, service } = this;
+    const {ctx, service} = this;
     const data = ctx.request.body;
     ctx.validate(this.createRule, data);
     const res = await service.categories.create(data);
@@ -60,7 +60,7 @@ class CategoriesController extends Controller {
   }
 
   async update() {
-    const { ctx, service } = this;
+    const {ctx, service} = this;
     const data = ctx.request.body;
     const id = ctx.params.id;
     ctx.validate(this.createRule, data);
@@ -75,7 +75,7 @@ class CategoriesController extends Controller {
   }
 
   async destroy() {
-    const { ctx, service } = this;
+    const {ctx, service} = this;
     const id = ctx.params.id;
     const res = await service.categories.destroy(id);
     ctx.helper.success({
